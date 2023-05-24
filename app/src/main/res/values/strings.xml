@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">fooddama</string>
+    <string name="no_account_signUp"><u>Don\'t have account? Sign up</u></string>
+    <string name="has_acc_signIn"><u>Already registered? Sign in</u></string>
 </resources>
