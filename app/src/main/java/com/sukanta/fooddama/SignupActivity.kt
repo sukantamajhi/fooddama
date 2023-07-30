@@ -47,7 +47,7 @@ class SignupActivity : AppCompatActivity() {
         }
     }
 
-    private fun MD5(md5: String): String? {
+    private fun md5(md5: String): String? {
         try {
             val md = MessageDigest.getInstance("MD5")
             val array = md.digest(md5.toByteArray(charset("UTF-8")))
@@ -86,7 +86,7 @@ class SignupActivity : AppCompatActivity() {
                     "id" to getRandomString(8),
                     "username" to userName,
                     "email" to email,
-                    "password" to MD5(password)
+                    "password" to md5(password)
                 )
 
                 println("This is user data $userData")
