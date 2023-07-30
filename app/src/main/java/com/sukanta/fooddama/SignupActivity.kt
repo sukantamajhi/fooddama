@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.android.volley.toolbox.Volley
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -63,7 +64,17 @@ class SignupActivity : AppCompatActivity() {
         return null
     }
 
+    private fun getRandomString(length: Int): String {
+        val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
+        return (1..length)
+            .map { allowedChars.random() }
+            .joinToString("")
+    }
+
     private fun createAccount(userName: String, email: String, password: String) {
+        val queue = Volley.newRequestQueue(this)
+        val url = "http://localhost:9001"
+
         // [START create_user_with_email]
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
             if (task.isSuccessful) {
@@ -72,8 +83,14 @@ class SignupActivity : AppCompatActivity() {
                 val user = auth.currentUser
                 val db = Firebase.firestore
                 val userData = hashMapOf(
-                    "username" to userName, "email" to email, "password" to MD5(password)
+                    "id" to getRandomString(8),
+                    "username" to userName,
+                    "email" to email,
+                    "password" to MD5(password)
                 )
+
+                println("This is user data $userData")
+
                 db.collection("users").add(userData).addOnSuccessListener { documentReference ->
                     Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
                 }.addOnFailureListener { e ->
@@ -84,6 +101,7 @@ class SignupActivity : AppCompatActivity() {
             } else {
                 // If sign in fails, display a message to the user.
 //                signIn(email, password)
+                Log.d("ERROR", "Something wrong happened")
             }
         }
         // [END create_user_with_email]

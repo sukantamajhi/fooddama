@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateUI(user: FirebaseUser?) {
+        Log.d(TAG, user.toString())
     }
 
     private fun reload() {
