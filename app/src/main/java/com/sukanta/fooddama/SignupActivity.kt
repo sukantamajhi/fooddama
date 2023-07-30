@@ -64,13 +64,6 @@ class SignupActivity : AppCompatActivity() {
         return null
     }
 
-    private fun getRandomString(length: Int): String {
-        val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
-        return (1..length)
-            .map { allowedChars.random() }
-            .joinToString("")
-    }
-
     private fun createAccount(userName: String, email: String, password: String) {
         val queue = Volley.newRequestQueue(this)
         val url = "http://localhost:9001"
@@ -79,17 +72,14 @@ class SignupActivity : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
             if (task.isSuccessful) {
                 // Sign in success, update UI with the signed-in user's information
-                Log.d(TAG, "createUserWithEmail:success")
                 val user = auth.currentUser
                 val db = Firebase.firestore
                 val userData = hashMapOf(
-                    "id" to getRandomString(8),
+                    "id" to user?.uid,
                     "username" to userName,
                     "email" to email,
                     "password" to md5(password)
                 )
-
-                println("This is user data $userData")
 
                 db.collection("users").add(userData).addOnSuccessListener { documentReference ->
                     Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
